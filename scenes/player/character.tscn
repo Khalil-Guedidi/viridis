@@ -11,8 +11,12 @@ clearcoat_roughness = 0.2
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_jw1de"]
 material = SubResource("StandardMaterial3D_kp17n")
+radius = 0.4
+height = 1.8
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_uy03j"]
+radius = 0.4
+height = 1.8
 
 [sub_resource type="Animation" id="Animation_j8cx7"]
 resource_name = "RESET"
