@@ -1,4 +1,3 @@
-
 # COPYRIGHT Colormatic Studios
 # MIT licence
 # Quality Godot First Person Controller v2
