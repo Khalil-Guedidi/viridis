@@ -40,10 +40,14 @@ func _update_terrain():
 	if not mesh_instance:
 		return
 	
+	var current_mesh = mesh_instance.mesh
+	
 	for node in nodes:
 		if not node:
-			return
-		else:
-			if not node.update_terrain:
-				node.update_terrain = Callable(self, "update_terrain")
-			mesh_instance.mesh = node.transform_mesh(mesh_instance.mesh)
+			continue
+		if not node.update_terrain:
+			node.update_terrain = Callable(self, "update_terrain")
+		
+		current_mesh = node.transform_mesh(mesh_instance.mesh)
+	
+	mesh_instance.mesh = current_mesh
