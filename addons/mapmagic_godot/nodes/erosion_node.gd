@@ -9,14 +9,19 @@ class_name ErosionNode
 		if update_terrain:
 			update_terrain.call(self)
 
+var original_mesh: Mesh = null
+
 func transform_mesh(mesh: Mesh) -> Mesh:
-	if not mesh:
+	if not original_mesh:
+		original_mesh = mesh.duplicate()
+	
+	if not original_mesh:
 		return mesh
 	
 	var surface_tool = SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 	
-	var array_mesh = mesh.surface_get_arrays(0)
+	var array_mesh = original_mesh.surface_get_arrays(0)
 	var vertices = array_mesh[Mesh.ARRAY_VERTEX]
 	var indices = array_mesh[Mesh.ARRAY_INDEX]
 	var uvs = array_mesh[Mesh.ARRAY_TEX_UV]

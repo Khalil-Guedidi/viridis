@@ -5,7 +5,7 @@ class_name MapMagicTerrain
 
 var mesh_instance: MeshInstance3D
 
-@export var nodes: Array[BaseNode] = []:
+@export var nodes: Array[BaseNode] = [NoiseNode.new()]:
 	set(value):
 		nodes = value
 		_update_terrain()
@@ -20,7 +20,6 @@ func _ready() -> void:
 		_create_mesh_instance()
 	
 	_update_terrain()
-	
 
 func _create_mesh_instance():
 	if mesh_instance:
@@ -38,9 +37,9 @@ func update_terrain(node):
 
 func _update_terrain():
 	if not mesh_instance:
-		return
+		_create_mesh_instance()
 	
-	var current_mesh = mesh_instance.mesh
+	var current_mesh = null
 	
 	for node in nodes:
 		if not node:

@@ -3,6 +3,12 @@ extends BaseNode
 
 class_name NoiseNode
 
+@export var noise_type: FastNoiseLite.NoiseType = FastNoiseLite.TYPE_PERLIN:
+	set(value):
+		noise_type = value
+		if update_terrain:
+			update_terrain.call(self)
+
 @export var seed: int = 0:
 	set(value):
 		seed = value
@@ -13,7 +19,7 @@ class_name NoiseNode
 	set(value):
 		frequency = value
 		if update_terrain:
-			update_terrain.call(self)
+			update_terrain.call()
 
 @export var octaves: int = 3:
 	set(value):
@@ -89,6 +95,7 @@ func transform_mesh(mesh: Mesh) -> Mesh:
 	return mesh
 
 func generate_noise_image() -> Image:
+	noise.noise_type = noise_type
 	noise.seed = seed
 	noise.frequency = frequency
 	noise.fractal_octaves = octaves
