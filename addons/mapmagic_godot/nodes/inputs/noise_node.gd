@@ -1,58 +1,65 @@
 @tool
-extends BaseNode
+extends InputNode
 
 class_name NoiseNode
 
 @export var noise_type: FastNoiseLite.NoiseType = FastNoiseLite.TYPE_PERLIN:
 	set(value):
 		noise_type = value
-		if update_terrain:
-			update_terrain.call(self)
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 @export var seed: int = 0:
 	set(value):
 		seed = value
-		if update_terrain:
-			update_terrain.call(self)
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 @export var frequency: float = 0.01:
 	set(value):
 		frequency = value
-		if update_terrain:
-			update_terrain.call()
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 @export var octaves: int = 3:
 	set(value):
 		octaves = value
-		if update_terrain:
-			update_terrain.call(self)
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 @export var plane_size: Vector2 = Vector2(1000, 1000):
 	set(value):
 		plane_size = value
-		if update_terrain:
-			update_terrain.call(self)
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 @export var resolution: int = 200:
 	set(value):
 		resolution = value
-		if update_terrain:
-			update_terrain.call(self)
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 @export var height_scale: float = 100.0:
 	set(value):
 		height_scale = value
-		if update_terrain:
-			update_terrain.call(self)
+		mesh_instance.mesh = null
+		create_mesh()
+		update_next_node()
 
 var noise = FastNoiseLite.new()
 var noise_image: Image
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func add_node() -> void:
+	if Engine.is_editor_hint():
+		create_mesh()
 
-func transform_mesh(mesh: Mesh) -> Mesh:
+func create_mesh() -> void:
 	noise_image = generate_noise_image()
 	
 	var surface_tool = SurfaceTool.new()
@@ -90,9 +97,7 @@ func transform_mesh(mesh: Mesh) -> Mesh:
 	surface_tool.generate_normals()
 	surface_tool.generate_tangents()
 	
-	mesh = surface_tool.commit()
-	
-	return mesh
+	mesh_instance.mesh = surface_tool.commit()
 
 func generate_noise_image() -> Image:
 	noise.noise_type = noise_type

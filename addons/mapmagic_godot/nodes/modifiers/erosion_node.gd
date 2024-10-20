@@ -1,22 +1,24 @@
 @tool
-extends BaseNode
+extends ModifierNode
 
 class_name ErosionNode
 
 @export var erosion_strength: float = 0.1:
 	set(value):
 		erosion_strength = value
-		if update_terrain:
-			update_terrain.call(self)
+		transform_mesh()
+		update_next_node()
 
-var original_mesh: Mesh = null
+func add_node() -> void:
+	if Engine.is_editor_hint():
+		transform_mesh()
 
-func transform_mesh(mesh: Mesh) -> Mesh:
-	if not original_mesh:
-		original_mesh = mesh.duplicate()
-	
-	if not original_mesh:
-		return mesh
+func update_node() -> void:
+	transform_mesh()
+	update_next_node()
+
+func transform_mesh() -> void:
+	var original_mesh = node_before.mesh_instance.mesh
 	
 	var surface_tool = SurfaceTool.new()
 	surface_tool.begin(Mesh.PRIMITIVE_TRIANGLES)
@@ -43,4 +45,4 @@ func transform_mesh(mesh: Mesh) -> Mesh:
 	surface_tool.generate_normals()
 	surface_tool.generate_tangents()
 	
-	return surface_tool.commit()
+	mesh_instance.mesh = surface_tool.commit()

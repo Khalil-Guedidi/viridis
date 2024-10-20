@@ -75,10 +75,6 @@ config/name="Viridis"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-PGGlobals="*res://addons/hoimar.planetgen/scripts/utils/pg_globals.gd"
-
 [editor]
 
 version_control/plugin_name="GitPlugin"
