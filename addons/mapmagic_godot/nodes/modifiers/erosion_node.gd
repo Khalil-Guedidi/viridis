@@ -6,16 +6,16 @@ class_name ErosionNode
 @export var erosion_strength: float = 0.1:
 	set(value):
 		erosion_strength = value
-		transform_mesh()
-		update_next_node()
+		update_node()
 
 func add_node() -> void:
 	if Engine.is_editor_hint():
 		transform_mesh()
 
 func update_node() -> void:
-	transform_mesh()
-	update_next_node()
+	if Engine.is_editor_hint():
+		transform_mesh()
+		update_next_node()
 
 func transform_mesh() -> void:
 	var original_mesh = node_before.mesh_instance.mesh

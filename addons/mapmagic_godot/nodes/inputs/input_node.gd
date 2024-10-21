@@ -4,18 +4,21 @@ extends BaseNode
 class_name InputNode
 
 @export var node_after: BaseNode:
-	set(new_node):
-		if new_node is ModifierNode or new_node is OutputNode or not new_node:
-			if node_after:
-				if node_after.node_after:
-					new_node = node_after.node_after
-				else:
-					node_after.remove_node()
-			if new_node:
-				new_node.root_node = root_node
-				new_node.node_before = self
-				new_node.add_node()
-			node_after = new_node
+	set(node):
+		if node_after:
+			node_after.remove_node()
+		if node is ModifierNode or node is OutputNode:
+			node.root_node = root_node
+			node.node_before = self
+			node.add_node()
+			node_after = node
+		if not node:
+			if node_after.get("node_after"):
+				node = node_after.node_after
+				node.node_before = self
+				node.update_node()
+			
+			node_after = node
 
 func create_mesh() -> void:
 	pass
