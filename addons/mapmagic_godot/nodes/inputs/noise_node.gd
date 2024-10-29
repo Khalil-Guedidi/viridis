@@ -3,6 +3,8 @@ extends InputNode
 
 class_name NoiseNode
 
+var associated_ui_scene = "res://addons/mapmagic_godot/dock/scenes/noise_node.tscn"
+
 @export var noise_type: FastNoiseLite.NoiseType = FastNoiseLite.TYPE_PERLIN:
 	set(value):
 		noise_type = value
@@ -58,6 +60,9 @@ var noise_image: Image
 func add_node() -> void:
 	if Engine.is_editor_hint():
 		create_mesh()
+		mesh_instance.name = "TerrainMesh"
+		root_node.add_child(mesh_instance)
+		mesh_instance.owner = root_node.get_tree().edited_scene_root
 
 func create_mesh() -> void:
 	if Engine.is_editor_hint():
