@@ -189,3 +189,14 @@ size_flags_horizontal = 3
 value = 100.0
 rounded = true
 allow_greater = true
+
+[node name="DeleteNode" type="Button" parent="."]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -35.0
+offset_bottom = 35.0
+grow_horizontal = 0
+text = "X"

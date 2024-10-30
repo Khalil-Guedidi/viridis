@@ -2,7 +2,7 @@
 extends Panel
 
 var id: int
-var mapmagic_terrain_id: int
+var mapmagic_terrain: MapMagicTerrain
 
 var noise_type: FastNoiseLite.NoiseType = FastNoiseLite.TYPE_PERLIN
 var seed: int = 0
@@ -21,10 +21,12 @@ var drag_start_position = Vector2()
 func _ready() -> void:
 	if not is_connected("gui_input", _on_gui_input):
 		connect("gui_input", _on_gui_input)
+	if not $DeleteNode.is_connected("pressed", _on_delete_node):
+		$DeleteNode.pressed.connect(_on_delete_node)
 
 func add_node(node_id: int, mapmagic_terrain_node: MapMagicTerrain) -> void:
 	id = node_id
-	mapmagic_terrain_id = mapmagic_terrain_node.id
+	mapmagic_terrain = mapmagic_terrain_node
 	var mesh_instance = MeshInstance3D.new()
 	create_mesh(mesh_instance)
 	mesh_instance.name = "TerrainMesh"
@@ -96,3 +98,8 @@ func _on_gui_input(event: InputEvent) -> void:
 				dragging = false
 	elif event is InputEventMouseMotion and dragging:
 		global_position = get_global_mouse_position() - drag_start_position
+
+func _on_delete_node() -> void:
+	if mapmagic_terrain.has_node("TerrainMesh"):
+		mapmagic_terrain.get_node("TerrainMesh").queue_free()
+	queue_free()
