@@ -1,9 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://di6s1ows2h5i"]
+[gd_scene load_steps=3 format=3 uid="uid://bhx7fdtbi8twq"]
 
-[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/noise_node_ui.gd" id="1_16sl7"]
+[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/nodes/noise_node.gd" id="1_fwpou"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fnyng"]
-bg_color = Color(0.429999, 0.478119, 0.550286, 1)
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
 
 [node name="NoiseNode" type="Panel"]
 custom_minimum_size = Vector2(250, 0)
@@ -13,7 +18,7 @@ offset_right = 294.0
 offset_bottom = 374.0
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_fnyng")
-script = ExtResource("1_16sl7")
+script = ExtResource("1_fwpou")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -23,6 +28,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 10
 
@@ -30,14 +36,16 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 
 [node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
-size_flags_vertical = 3
+size_flags_vertical = 1
 text = "Noise"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Properties" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="NoiseType" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
 layout_mode = 2
@@ -50,21 +58,23 @@ size_flags_vertical = 1
 text = "Noise Type"
 vertical_alignment = 1
 
-[node name="Value" type="OptionButton" parent="MarginContainer/VBoxContainer/Properties/NoiseType"]
+[node name="Value" type="OptionButton" parent="MarginContainer/VBoxContainer/Properties/NoiseType" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
-text_overrun_behavior = 1
+toggle_mode = false
+selected = 0
+fit_to_longest_item = false
 item_count = 6
-popup/item_0/text = "Value"
-popup/item_1/text = "Value Cubic"
+popup/item_0/text = "Simplex"
+popup/item_1/text = "Simplex Smooth"
 popup/item_1/id = 1
-popup/item_2/text = "Perlin"
+popup/item_2/text = "Cellular"
 popup/item_2/id = 2
-popup/item_3/text = "Cellular"
+popup/item_3/text = "Perlin"
 popup/item_3/id = 3
-popup/item_4/text = "Simplex"
+popup/item_4/text = "Value Cubic"
 popup/item_4/id = 4
-popup/item_5/text = "Simplex Smooth"
+popup/item_5/text = "Value"
 popup/item_5/id = 5
 
 [node name="Seed" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
@@ -78,7 +88,7 @@ size_flags_vertical = 1
 text = "Seed"
 vertical_alignment = 1
 
-[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Seed"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Seed" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
 rounded = true
@@ -95,7 +105,7 @@ size_flags_vertical = 1
 text = "Frequency"
 vertical_alignment = 1
 
-[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Frequency"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Frequency" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
 step = 0.01
@@ -113,18 +123,18 @@ size_flags_vertical = 1
 text = "Octaves"
 vertical_alignment = 1
 
-[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Octaves"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Octaves" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
 value = 3.0
 rounded = true
 allow_greater = true
 
-[node name="PlaneSize" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+[node name="Plane" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/PlaneSize"]
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/Plane"]
 custom_minimum_size = Vector2(0, 31)
 layout_mode = 2
 size_flags_horizontal = 3
@@ -132,22 +142,24 @@ size_flags_vertical = 0
 text = "Plane Size"
 vertical_alignment = 1
 
-[node name="Value" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/PlaneSize"]
+[node name="Size" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/Plane"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="x" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/PlaneSize/Value"]
+[node name="x" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Plane/Size" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
-value = 100.0
+max_value = 1000.0
+value = 1000.0
 rounded = true
 allow_greater = true
 prefix = "x :"
 
-[node name="y" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/PlaneSize/Value"]
+[node name="y" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Plane/Size" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
-value = 100.0
+max_value = 1000.0
+value = 1000.0
 rounded = true
 allow_greater = true
 prefix = "y : "
@@ -164,7 +176,7 @@ text = "Resolution
 "
 vertical_alignment = 1
 
-[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Resolution"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Resolution" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
@@ -183,7 +195,7 @@ text = "Height Scale
 "
 vertical_alignment = 1
 
-[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/HeightScale"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/HeightScale" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
 value = 100.0
@@ -196,7 +208,27 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -35.0
-offset_bottom = 35.0
+offset_left = -38.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = 38.0
 grow_horizontal = 0
 text = "X"
+
+[node name="NodeAfter" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 157.0
+offset_right = 288.0
+offset_bottom = 189.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_fnyng")
+
+[node name="Button" type="TextureButton" parent="NodeAfter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Line" type="Line2D" parent="NodeAfter/Button"]

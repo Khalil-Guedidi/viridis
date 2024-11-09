@@ -32,6 +32,9 @@ grow_vertical = 2
 [node name="MenuButton" type="MenuButton" parent="VBoxContainer/ToolsPanel/HBoxContainer"]
 custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
+toggle_mode = false
 text = "Add node"
-item_count = 1
+item_count = 2
 popup/item_0/text = "Noise"
+popup/item_1/text = "Erosion"
+popup/item_1/id = 1

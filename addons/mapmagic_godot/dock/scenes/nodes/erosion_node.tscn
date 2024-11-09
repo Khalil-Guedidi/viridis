@@ -1,0 +1,102 @@
+[gd_scene load_steps=4 format=3 uid="uid://bnhi2paau7x5g"]
+
+[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/nodes/erosion_node.gd" id="1_siq1b"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_e78y1"]
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ksvq6"]
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
+
+[node name="ErosionNode" type="Panel"]
+custom_minimum_size = Vector2(250, 0)
+offset_left = 33.0
+offset_top = 33.0
+offset_right = 294.0
+offset_bottom = 133.0
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_e78y1")
+script = ExtResource("1_siq1b")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_vertical = 1
+text = "Erosion"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Properties" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Strength" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/Strength"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Erosion strength"
+vertical_alignment = 1
+
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/Strength" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.01
+value = 0.1
+allow_greater = true
+
+[node name="DeleteNode" type="Button" parent="."]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -38.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = 38.0
+grow_horizontal = 0
+text = "X"
+
+[node name="NodeBefore" type="Panel" parent="."]
+layout_mode = 0
+offset_left = -27.0
+offset_top = 38.0
+offset_right = 3.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_ksvq6")
+
+[node name="Button" type="TextureButton" parent="NodeBefore"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
