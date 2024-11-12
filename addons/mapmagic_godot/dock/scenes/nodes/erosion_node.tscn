@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://bnhi2paau7x5g"]
+[gd_scene load_steps=5 format=3 uid="uid://bnhi2paau7x5g"]
 
 [ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/nodes/erosion_node.gd" id="1_siq1b"]
 
@@ -11,6 +11,14 @@ border_width_bottom = 3
 border_color = Color(0.270588, 0.435294, 0.580392, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ksvq6"]
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xwb1g"]
 bg_color = Color(0.168627, 0.211765, 0.266667, 1)
 border_width_left = 3
 border_width_top = 3
@@ -100,3 +108,20 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="NodeAfter" type="Panel" parent="."]
+offset_left = 258.0
+offset_top = 38.0
+offset_right = 288.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_xwb1g")
+
+[node name="Button" type="TextureButton" parent="NodeAfter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Line" type="Line2D" parent="NodeAfter/Button"]

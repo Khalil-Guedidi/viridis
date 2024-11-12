@@ -9,9 +9,12 @@ extends Panel
 @export_storage var mesh: Mesh
 
 @export_storage var node_before_path
+@export_storage var node_after_path
 
 var dragging = false
 var drag_start_position = Vector2()
+
+var setting_node_after: bool = false
 
 func _ready() -> void:
 	if Engine.is_editor_hint():
@@ -21,17 +24,23 @@ func _ready() -> void:
 			$DeleteNode.pressed.connect(_on_delete_node)
 		if not $NodeBefore/Button.is_connected("pressed", _on_node_before_pressed):
 			$NodeBefore/Button.pressed.connect(_on_node_before_pressed)
+		if not $NodeAfter/Button.is_connected("pressed", _on_node_after_pressed):
+			$NodeAfter/Button.pressed.connect(_on_node_after_pressed)
 		
 		for node in find_children("*"):
 			if node.is_in_group("values"):
 				node.value_changed.connect(_on_change_property.bind(node))
+
+func _process(delta: float) -> void:
+	if setting_node_after:
+		$NodeAfter/Button/Line.set_point_position(1, $NodeAfter/Button/Line.get_local_mouse_position())
 
 func add_node(node_id: int, mapmagic_terrain_node: MapMagicTerrain) -> void:
 	if Engine.is_editor_hint():
 		id = node_id
 		mapmagic_terrain = mapmagic_terrain_node.get_path()
 
-func transform_mesh(mesh_instance: MeshInstance3D) -> void:
+func transform_mesh() -> void:
 	if Engine.is_editor_hint():
 		var original_mesh = get_node(node_before_path).mesh
 		
@@ -61,7 +70,15 @@ func transform_mesh(mesh_instance: MeshInstance3D) -> void:
 		surface_tool.generate_tangents()
 		
 		mesh = surface_tool.commit()
-		mesh_instance.mesh = mesh
+		get_node(mapmagic_terrain + "/TerrainMesh").mesh = mesh
+		
+		if node_after_path:
+			get_node(node_after_path).transform_mesh()
+
+func remove_connection_line():
+	node_after_path = null
+	$NodeAfter/Button/Line.remove_point(1)
+	$NodeAfter/Button/Line.remove_point(0)
 
 func _on_gui_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
@@ -83,8 +100,8 @@ func _on_change_property(value, node) -> void:
 			"Strength":
 				erosion_strength = value
 		
-		if get_node(mapmagic_terrain).has_node("TerrainMesh"):
-			transform_mesh(get_node(mapmagic_terrain).get_node("TerrainMesh"))
+		if get_node(mapmagic_terrain).has_node("TerrainMesh") and node_before_path:
+			transform_mesh()
 
 func _on_delete_node() -> void:
 	if Engine.is_editor_hint():		
@@ -101,4 +118,14 @@ func _on_node_before_pressed() -> void:
 		get_node(node_before_path).node_after_path = get_path()
 		get_node(mapmagic_terrain).node_before_to_set_path = null
 		if get_node(mapmagic_terrain).has_node("TerrainMesh"):
-			transform_mesh(get_node(mapmagic_terrain + "/TerrainMesh"))
+			transform_mesh()
+	else:
+		node_before_path = null
+		get_node(node_before_path).remove_connection_line()
+
+func _on_node_after_pressed() -> void:
+	if not node_after_path:
+		get_node(mapmagic_terrain).node_before_to_set_path = get_path()
+		$NodeAfter/Button/Line.add_point(Vector2(15, 15))
+		setting_node_after = true
+		$NodeAfter/Button/Line.add_point(Vector2(15, 15))

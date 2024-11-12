@@ -1,0 +1,223 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpn1jqu0lx21v"]
+
+[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/nodes/texture_node.gd" id="1_arnyg"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oioct"]
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qpfvr"]
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rjijg"]
+bg_color = Color(0.168627, 0.211765, 0.266667, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.270588, 0.435294, 0.580392, 1)
+
+[node name="TextureNode" type="Panel"]
+custom_minimum_size = Vector2(250, 0)
+offset_left = 33.0
+offset_top = 33.0
+offset_right = 294.0
+offset_bottom = 389.0
+mouse_filter = 1
+theme_override_styles/panel = SubResource("StyleBoxFlat_oioct")
+script = ExtResource("1_arnyg")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 35)
+layout_mode = 2
+size_flags_vertical = 1
+text = "Texture"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Properties" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Texture" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/Texture"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Texture"
+vertical_alignment = 1
+
+[node name="TextureProperties" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/Texture"]
+layout_mode = 2
+
+[node name="Preview" type="TextureButton" parent="MarginContainer/VBoxContainer/Properties/Texture/TextureProperties"]
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/Texture/TextureProperties/Preview"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Click to add a texture"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="Path" type="LineEdit" parent="MarginContainer/VBoxContainer/Properties/Texture/TextureProperties" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+editable = false
+
+[node name="UVScale" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/UVScale"]
+custom_minimum_size = Vector2(0, 31)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "UV Scale"
+vertical_alignment = 1
+
+[node name="Size" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/UVScale"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="x" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVScale/Size" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.09715e+06
+value = 1.0
+rounded = true
+allow_greater = true
+prefix = "x :"
+
+[node name="y" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVScale/Size" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.09715e+06
+value = 1.0
+rounded = true
+allow_greater = true
+prefix = "y : "
+
+[node name="UVOffset" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/UVOffset"]
+custom_minimum_size = Vector2(0, 31)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "UV Offset"
+vertical_alignment = 1
+
+[node name="Size" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/UVOffset"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="x" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVOffset/Size" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.09715e+06
+value = 1.0
+rounded = true
+allow_greater = true
+prefix = "x :"
+
+[node name="y" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVOffset/Size" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 2.09715e+06
+value = 1.0
+rounded = true
+allow_greater = true
+prefix = "y : "
+
+[node name="DeleteNode" type="Button" parent="."]
+custom_minimum_size = Vector2(35, 35)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -38.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = 38.0
+grow_horizontal = 0
+text = "X"
+
+[node name="NodeBefore" type="Panel" parent="."]
+layout_mode = 0
+offset_left = -27.0
+offset_top = 38.0
+offset_right = 3.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qpfvr")
+
+[node name="Button" type="TextureButton" parent="NodeBefore"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NodeAfter" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 258.0
+offset_top = 38.0
+offset_right = 288.0
+offset_bottom = 70.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rjijg")
+
+[node name="Button" type="TextureButton" parent="NodeAfter"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Line" type="Line2D" parent="NodeAfter/Button"]
+
+[node name="FileDialog" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 2
+size = Vector2i(300, 300)
+ok_button_text = "Open"
+dialog_hide_on_ok = true
+file_mode = 0
+root_subfolder = "res://"

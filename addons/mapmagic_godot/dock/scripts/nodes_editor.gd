@@ -55,3 +55,14 @@ func _on_add_node_item_pressed(id: int):
 					var scene = PackedScene.new()
 					scene.pack($VBoxContainer/EditorPanel)
 					ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)
+			2:
+				var texture = preload("res://addons/mapmagic_godot/dock/scenes/nodes/texture_node.tscn").instantiate()
+				if $VBoxContainer.has_node("EditorPanel") && mapmagic_terrain_node:
+					$VBoxContainer/EditorPanel/Content.add_child(texture)
+					set_editable_instance(texture, true)
+					texture.owner = $VBoxContainer/EditorPanel
+					var node_id = $VBoxContainer/EditorPanel/Content.get_child_count()
+					texture.add_node(node_id, mapmagic_terrain_node)
+					var scene = PackedScene.new()
+					scene.pack($VBoxContainer/EditorPanel)
+					ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)

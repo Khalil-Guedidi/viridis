@@ -99,6 +99,9 @@ func create_mesh(mesh_instance: MeshInstance3D) -> void:
 		
 		mesh = surface_tool.commit()
 		mesh_instance.mesh = mesh
+		
+		if node_after_path:
+			get_node(node_after_path).transform_mesh()
 
 func generate_noise_image() -> Image:
 	noise.noise_type = noise_type_number
