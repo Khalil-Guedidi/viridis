@@ -16,7 +16,7 @@ func _ready() -> void:
 			var editor_panel = preload("res://addons/mapmagic_godot/dock/scenes/editor_panel.tscn")
 			ResourceSaver.save(editor_panel, editor_panel_path)
 
-func _notification(what) -> void:
-	if Engine.is_editor_hint() and what == NOTIFICATION_PREDELETE:
+func _on_delete_node() -> void:
+	if Engine.is_editor_hint():
 		DirAccess.remove_absolute("res://addons/mapmagic_godot/data/" + str(id) + "/editor_panel.tscn")
 		DirAccess.remove_absolute("res://addons/mapmagic_godot/data/" + str(id))

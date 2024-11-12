@@ -6,6 +6,8 @@ extends Panel
 
 @export_storage var erosion_strength: float = 0.1
 
+@export_storage var mesh: Mesh
+
 @export_storage var node_before_path
 
 var dragging = false
@@ -58,7 +60,8 @@ func transform_mesh(mesh_instance: MeshInstance3D) -> void:
 		surface_tool.generate_normals()
 		surface_tool.generate_tangents()
 		
-		mesh_instance.mesh = surface_tool.commit()
+		mesh = surface_tool.commit()
+		mesh_instance.mesh = mesh
 
 func _on_gui_input(event: InputEvent) -> void:
 	if Engine.is_editor_hint():
@@ -84,11 +87,9 @@ func _on_change_property(value, node) -> void:
 			transform_mesh(get_node(mapmagic_terrain).get_node("TerrainMesh"))
 
 func _on_delete_node() -> void:
-	if Engine.is_editor_hint():
-		if get_node(mapmagic_terrain).has_node("TerrainMesh"):
-			get_node(mapmagic_terrain).get_node("TerrainMesh").queue_free()
-		
-		if node_before_path:
+	if Engine.is_editor_hint():		
+		if node_before_path and get_node(mapmagic_terrain).has_node("TerrainMesh"):
+			get_node(mapmagic_terrain + "/TerrainMesh").mesh = get_node(node_before_path).mesh
 			get_node(node_before_path).remove_connection_line()
 		
 		queue_free()
@@ -99,3 +100,5 @@ func _on_node_before_pressed() -> void:
 		get_node(node_before_path).setting_node_after = false
 		get_node(node_before_path).node_after_path = get_path()
 		get_node(mapmagic_terrain).node_before_to_set_path = null
+		if get_node(mapmagic_terrain).has_node("TerrainMesh"):
+			transform_mesh(get_node(mapmagic_terrain + "/TerrainMesh"))

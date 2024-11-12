@@ -97,7 +97,8 @@ func create_mesh(mesh_instance: MeshInstance3D) -> void:
 		surface_tool.generate_normals()
 		surface_tool.generate_tangents()
 		
-		mesh_instance.mesh = surface_tool.commit()
+		mesh = surface_tool.commit()
+		mesh_instance.mesh = mesh
 
 func generate_noise_image() -> Image:
 	noise.noise_type = noise_type_number
