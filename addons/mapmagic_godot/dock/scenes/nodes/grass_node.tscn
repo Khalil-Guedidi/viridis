@@ -1,6 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://dpn1jqu0lx21v"]
+[gd_scene load_steps=5 format=3 uid="uid://d3iri7ubuiwjv"]
 
-[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/nodes/texture_node.gd" id="1_arnyg"]
+[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/nodes/texture_node.gd" id="1_dcegx"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_deao8"]
 bg_color = Color(0.168627, 0.211765, 0.266667, 1)
@@ -26,15 +26,15 @@ border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.270588, 0.435294, 0.580392, 1)
 
-[node name="TextureNode" type="Panel"]
+[node name="GrassNode" type="Panel"]
 custom_minimum_size = Vector2(250, 0)
 offset_left = 33.0
 offset_top = 33.0
 offset_right = 294.0
-offset_bottom = 390.0
+offset_bottom = 428.0
 mouse_filter = 1
 theme_override_styles/panel = SubResource("StyleBoxFlat_deao8")
-script = ExtResource("1_arnyg")
+script = ExtResource("1_dcegx")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -55,7 +55,7 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
 size_flags_vertical = 1
-text = "Texture"
+text = "Grass"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -100,73 +100,95 @@ layout_mode = 2
 size_flags_horizontal = 3
 editable = false
 
-[node name="UVScale" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+[node name="GrassHeight" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/UVScale"]
-custom_minimum_size = Vector2(0, 31)
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/GrassHeight"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
-text = "UV Scale"
+size_flags_vertical = 1
+text = "Grass Height"
 vertical_alignment = 1
 
-[node name="Size" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/UVScale"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/GrassHeight" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="x" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVScale/Size" groups=["values"]]
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 2.09715e+06
+step = 0.01
 value = 1.0
-rounded = true
 allow_greater = true
-prefix = "x :"
 
-[node name="y" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVScale/Size" groups=["values"]]
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 2.09715e+06
-value = 1.0
-rounded = true
-allow_greater = true
-prefix = "y : "
-
-[node name="UVOffset" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+[node name="CellSize" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/UVOffset"]
-custom_minimum_size = Vector2(0, 31)
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/CellSize"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
-text = "UV Offset"
+size_flags_vertical = 1
+text = "Cell Size"
 vertical_alignment = 1
 
-[node name="Point" type="VBoxContainer" parent="MarginContainer/VBoxContainer/Properties/UVOffset"]
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/CellSize" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="x" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVOffset/Point" groups=["values"]]
-layout_mode = 2
-size_flags_horizontal = 3
-max_value = 2.09715e+06
-value = 1.0
+value = 50.0
 rounded = true
 allow_greater = true
-prefix = "x :"
 
-[node name="y" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/UVOffset/Point" groups=["values"]]
+[node name="DensityMin" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/DensityMin"]
 layout_mode = 2
 size_flags_horizontal = 3
-max_value = 2.09715e+06
-value = 1.0
+size_flags_vertical = 1
+text = "Density min"
+vertical_alignment = 1
+
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/DensityMin" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.01
+value = 0.01
+allow_greater = true
+
+[node name="DensityMax" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/DensityMax"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Density max"
+vertical_alignment = 1
+
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/DensityMax" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+step = 0.01
+value = 0.1
+allow_greater = true
+
+[node name="MaxDistance" type="HBoxContainer" parent="MarginContainer/VBoxContainer/Properties"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/Properties/MaxDistance"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Max distance"
+vertical_alignment = 1
+
+[node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/MaxDistance" groups=["values"]]
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
 rounded = true
 allow_greater = true
-prefix = "y : "
 
 [node name="DeleteNode" type="Button" parent="."]
 custom_minimum_size = Vector2(35, 35)
@@ -184,9 +206,9 @@ text = "X"
 [node name="NodeBefore" type="Panel" parent="."]
 layout_mode = 0
 offset_left = -27.0
-offset_top = 169.0
+offset_top = 201.0
 offset_right = 3.0
-offset_bottom = 201.0
+offset_bottom = 233.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_6wroy")
 
 [node name="Button" type="TextureButton" parent="NodeBefore"]
@@ -200,9 +222,9 @@ grow_vertical = 2
 [node name="NodeAfter" type="Panel" parent="."]
 layout_mode = 0
 offset_left = 258.0
-offset_top = 169.0
+offset_top = 201.0
 offset_right = 288.0
-offset_bottom = 201.0
+offset_bottom = 233.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_p3ano")
 
 [node name="Button" type="TextureButton" parent="NodeAfter"]
