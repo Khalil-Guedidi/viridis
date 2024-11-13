@@ -31,7 +31,7 @@ func _ready() -> void:
 		if not $MarginContainer/VBoxContainer/Properties/Texture/TextureProperties/Preview.is_connected("pressed", _on_texture_button_pressed):
 			$MarginContainer/VBoxContainer/Properties/Texture/TextureProperties/Preview.pressed.connect(_on_texture_button_pressed)
 		if not $FileDialog.is_connected("file_selected", _on_file_dialog_file_selected):
-			$FileDialog.files_selected.connect(_on_file_dialog_file_selected)
+			$FileDialog.file_selected.connect(_on_file_dialog_file_selected)
 		
 		for node in find_children("*"):
 			if node.is_in_group("values"):
@@ -50,7 +50,7 @@ func add_node(node_id: int, mapmagic_terrain_node: MapMagicTerrain) -> void:
 		mapmagic_terrain = mapmagic_terrain_node.get_path()
 
 func transform_mesh() -> void:
-	if Engine.is_editor_hint():
+	if Engine.is_editor_hint() and texture_path:
 		var original_mesh = get_node(node_before_path).mesh
 		
 		var surface_tool = SurfaceTool.new()
@@ -58,11 +58,7 @@ func transform_mesh() -> void:
 		
 		surface_tool.create_from(original_mesh, 0)
 		
-		var image = Image.new()
-		image.load(texture_path)
-		
-		var image_texture = ImageTexture.new()
-		image_texture.set_image(image)
+		var image_texture = load(texture_path)
 		
 		var material = StandardMaterial3D.new()
 		material.albedo_texture = image_texture
@@ -82,20 +78,21 @@ func transform_mesh() -> void:
 
 func _on_texture_path_changed(path: String) -> void:
 	texture_path = path
+	transform_mesh()
 
 func _on_change_property(value, node) -> void:
 	if Engine.is_editor_hint():
 		match node.get_parent().name:
-			"UVScale":
+			"Size":
 				if node.name == "x":
 					uv_scale.x = value
 				else:
-					uv_scale.z = value
-			"UVOffset":
+					uv_scale.y = value
+			"Point":
 				if node.name == "x":
 					uv_offset.x = value
 				else:
-					uv_offset.z = value
+					uv_offset.y = value
 		
 		if get_node(mapmagic_terrain).has_node("TerrainMesh") and node_before_path:
 			transform_mesh()
@@ -147,10 +144,11 @@ func _on_texture_button_pressed() -> void:
 func _on_file_dialog_file_selected(path) -> void:
 	texture_path = path
 	
-	var image = Image.new()
-	image.load(path)
-	
-	var image_texture = ImageTexture.new()
-	image_texture.set_image(image)
+	var image_texture = load(path)
 	
 	$MarginContainer/VBoxContainer/Properties/Texture/TextureProperties/Preview.texture_normal = image_texture
+	$MarginContainer/VBoxContainer/Properties/Texture/TextureProperties/Preview/Label.visible = false
+	$MarginContainer/VBoxContainer/Properties/Texture/TextureProperties/Path.text = path
+	
+	if get_node(mapmagic_terrain).has_node("TerrainMesh") and node_before_path:
+			transform_mesh()

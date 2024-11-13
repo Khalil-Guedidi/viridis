@@ -40,3 +40,5 @@ popup/item_1/text = "Erosion"
 popup/item_1/id = 1
 popup/item_2/text = "Texture"
 popup/item_2/id = 2
+
+[connection signal="gui_input" from="VBoxContainer/EditorPanel" to="VBoxContainer/EditorPanel" method="_on_gui_input"]
