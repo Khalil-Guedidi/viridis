@@ -66,3 +66,23 @@ func _on_add_node_item_pressed(id: int):
 					var scene = PackedScene.new()
 					scene.pack($VBoxContainer/EditorPanel)
 					ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)
+			3:
+				var grass = preload("res://addons/mapmagic_godot/dock/scenes/nodes/grass_node.tscn").instantiate()
+				if $VBoxContainer.has_node("EditorPanel") && mapmagic_terrain_node:
+					$VBoxContainer/EditorPanel/Content.add_child(grass)
+					set_editable_instance(grass, true)
+					grass.owner = $VBoxContainer/EditorPanel
+					var node_id = $VBoxContainer/EditorPanel/Content.get_child_count()
+					grass.add_node(node_id, mapmagic_terrain_node)
+					var scene = PackedScene.new()
+					scene.pack($VBoxContainer/EditorPanel)
+					ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)
+
+func _exit_tree() -> void:
+	if Engine.is_editor_hint():
+		if $VBoxContainer.has_node("EditorPanel"):
+			$VBoxContainer/EditorPanel.queue_free()
+			if EditorInterface.get_edited_scene_root().has_node("MapMagicTerrain"):
+				var scene = PackedScene.new()
+				scene.pack($VBoxContainer/EditorPanel)
+				ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)

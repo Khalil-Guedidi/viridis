@@ -74,6 +74,26 @@ func transform_mesh() -> void:
 		
 		if node_after_path:
 			get_node(node_after_path).transform_mesh()
+		else:
+			setup_collision(get_node(mapmagic_terrain + "/TerrainMesh"))
+
+func setup_collision(mesh_instance: MeshInstance3D) -> void:
+	var static_body = StaticBody3D.new()
+	static_body.name = "TerrainBody"
+	mesh_instance.add_child(static_body)
+	
+	static_body.owner = mesh_instance
+	
+	var collision_shape = CollisionShape3D.new()
+	collision_shape.name = "TerrainCollision"
+	
+	var shape = ConcavePolygonShape3D.new()
+	shape.set_faces(mesh_instance.mesh.get_faces())
+	collision_shape.shape = shape
+	
+	static_body.add_child(collision_shape)
+	
+	collision_shape.owner = mesh_instance
 
 func remove_connection_line():
 	node_after_path = null
@@ -120,8 +140,10 @@ func _on_node_before_pressed() -> void:
 		if get_node(mapmagic_terrain).has_node("TerrainMesh"):
 			transform_mesh()
 	else:
-		node_before_path = null
-		get_node(node_before_path).remove_connection_line()
+		if get_node(mapmagic_terrain).has_node("TerrainMesh"):
+			get_node(mapmagic_terrain + "/TerrainMesh").mesh = get_node(node_before_path).mesh
+			get_node(node_before_path).remove_connection_line()
+			node_before_path = null
 
 func _on_node_after_pressed() -> void:
 	if not node_after_path:

@@ -52,11 +52,11 @@ func add_node(node_id: int, mapmagic_terrain_node: MapMagicTerrain) -> void:
 		mapmagic_terrain = mapmagic_terrain_node.get_path()
 		noise_type_number = 0
 		var mesh_instance = MeshInstance3D.new()
-		create_mesh(mesh_instance)
 		mesh = mesh_instance.mesh
 		mesh_instance.name = "TerrainMesh"
 		mapmagic_terrain_node.add_child(mesh_instance)
 		mesh_instance.owner = get_tree().edited_scene_root
+		create_mesh(mesh_instance)
 
 func create_mesh(mesh_instance: MeshInstance3D) -> void:
 	if Engine.is_editor_hint():
@@ -102,6 +102,27 @@ func create_mesh(mesh_instance: MeshInstance3D) -> void:
 		
 		if node_after_path:
 			get_node(node_after_path).transform_mesh()
+		else:
+			setup_collision(mesh_instance)
+
+func setup_collision(mesh_instance: MeshInstance3D) -> void:
+	if Engine.is_editor_hint():
+		var static_body = StaticBody3D.new()
+		static_body.name = "TerrainBody"
+		get_node(mapmagic_terrain + "/TerrainMesh").add_child(static_body)
+
+		static_body.owner = get_tree().edited_scene_root
+		
+		var collision_shape = CollisionShape3D.new()
+		collision_shape.name = "TerrainCollision"
+
+		var shape = ConcavePolygonShape3D.new()
+		shape.set_faces(mesh_instance.mesh.get_faces())
+		collision_shape.shape = shape
+		
+		static_body.add_child(collision_shape)
+		
+		collision_shape.owner = get_tree().edited_scene_root
 
 func generate_noise_image() -> Image:
 	noise.noise_type = noise_type_number

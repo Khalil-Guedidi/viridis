@@ -34,11 +34,13 @@ custom_minimum_size = Vector2(125, 0)
 layout_mode = 2
 toggle_mode = false
 text = "Add node"
-item_count = 3
+item_count = 4
 popup/item_0/text = "Noise"
 popup/item_1/text = "Erosion"
 popup/item_1/id = 1
 popup/item_2/text = "Texture"
 popup/item_2/id = 2
+popup/item_3/text = "Grass"
+popup/item_3/id = 3
 
 [connection signal="gui_input" from="VBoxContainer/EditorPanel" to="VBoxContainer/EditorPanel" method="_on_gui_input"]
