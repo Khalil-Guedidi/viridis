@@ -6,6 +6,7 @@ class_name MapMagicTerrain
 var id: int = int(Time.get_unix_time_from_system())
 
 @export var editor_panel_path: String = "res://addons/mapmagic_godot/data/" + str(id) + "/editor_panel.tscn"
+@export var player_path: NodePath
 
 var node_before_to_set_path
 

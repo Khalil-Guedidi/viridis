@@ -6,7 +6,7 @@ extends Panel
 
 @export_storage var texture_path: String
 @export_storage var grass_height: float = 1.0
-@export_storage var cell_size: float = 50.0
+@export_storage var cell_size: float = 100.0
 @export_storage var min_density: float = 0.01
 @export_storage var max_density: float = 0.1
 @export_storage var max_distance: float = 100.0
@@ -45,8 +45,9 @@ func _ready() -> void:
 					node.value_changed.connect(_on_change_property.bind(node))
 
 func _process(delta: float) -> void:
-	if setting_node_after:
-		$NodeAfter/Button/Line.set_point_position(1, $NodeAfter/Button/Line.get_local_mouse_position())
+	if Engine.is_editor_hint():
+		if setting_node_after:
+			$NodeAfter/Button/Line.set_point_position(1, $NodeAfter/Button/Line.get_local_mouse_position())
 
 func add_node(node_id: int, mapmagic_terrain_node: MapMagicTerrain) -> void:
 	if Engine.is_editor_hint():
@@ -55,47 +56,85 @@ func add_node(node_id: int, mapmagic_terrain_node: MapMagicTerrain) -> void:
 
 func transform_mesh() -> void:
 	if Engine.is_editor_hint():
-		if node_before_path and get_node(mapmagic_terrain).has_node("TerrainMesh/GrassInstance"):
-			get_node(mapmagic_terrain + "/TerrainMesh/GrassInstance").free()
-		multimesh_instance = MultiMeshInstance3D.new()
-		multimesh_instance.name = "GrassInstance"
-		get_node(mapmagic_terrain).find_child("TerrainMesh").add_child(multimesh_instance)
-		multimesh_instance.owner = get_tree().edited_scene_root
-		
+		if get_node(mapmagic_terrain).has_node("TerrainMesh/GrassInstances"):
+			get_node(mapmagic_terrain + "/TerrainMesh/GrassInstances").free()
+
+		var parent_node = Node3D.new()
+		parent_node.name = "GrassInstances"
+		get_node(mapmagic_terrain).find_child("TerrainMesh").add_child(parent_node)
+		parent_node.owner = get_tree().edited_scene_root
+
 		var original_mesh = get_node(node_before_path).mesh
-		
 		var mdt = MeshDataTool.new()
 		mdt.create_from_surface(original_mesh, 0)
 
-		multimesh = MultiMesh.new()
-		multimesh.transform_format = MultiMesh.TRANSFORM_3D
-		multimesh.mesh = create_grass_mesh()
-
-		var grass_count = int(mdt.get_vertex_count() * max_density)
-		multimesh.instance_count = grass_count
+		var bounds_min = Vector3.INF
+		var bounds_max = -Vector3.INF
 		
-		for i in range(grass_count):
-			var random_triangle = randi() % mdt.get_face_count()
-			var vertex1 = mdt.get_vertex(mdt.get_face_vertex(random_triangle, 0))
-			var vertex2 = mdt.get_vertex(mdt.get_face_vertex(random_triangle, 1))
-			var vertex3 = mdt.get_vertex(mdt.get_face_vertex(random_triangle, 2))
+		for i in range(mdt.get_vertex_count()):
+			var vertex = mdt.get_vertex(i)
+			bounds_min = bounds_min.min(vertex)
+			bounds_max = bounds_max.max(vertex)
+		
+		var cell_count_x = ceil((bounds_max.x - bounds_min.x) / cell_size)
+		var cell_count_z = ceil((bounds_max.z - bounds_min.z) / cell_size)
+		
+		for cell_x in range(cell_count_x):
+			for cell_z in range(cell_count_z):
+				var cell_min = Vector3(
+					bounds_min.x + cell_x * cell_size,
+					bounds_min.y,
+					bounds_min.z + cell_z * cell_size
+				)
+				var cell_max = Vector3(
+					cell_min.x + cell_size,
+					bounds_max.y,
+					cell_min.z + cell_size
+				)
 
+				var multimesh = MultiMesh.new()
+				multimesh.transform_format = MultiMesh.TRANSFORM_3D
+				multimesh.mesh = create_grass_mesh()
+
+				var instance_positions = generate_grass_instances(mdt, cell_min, cell_max)
+				multimesh.instance_count = instance_positions.size()
+				for i in range(instance_positions.size()):
+					multimesh.set_instance_transform(i, instance_positions[i])
+
+				var multimesh_instance = MultiMeshInstance3D.new()
+				multimesh_instance.multimesh = multimesh
+				multimesh_instance.name = "GrassInstance_{x}_{y}".format({"x": cell_x, "y": cell_z})
+				multimesh_instance.visibility_range_end = max_distance
+				parent_node.add_child(multimesh_instance)
+				multimesh_instance.owner = get_tree().edited_scene_root
+
+func generate_grass_instances(mdt: MeshDataTool, cell_min: Vector3, cell_max: Vector3) -> Array:
+	var positions = []
+	var cell_bounds = AABB(cell_min, cell_max - cell_min)
+
+	for triangle in range(mdt.get_face_count()):
+		var vertex1 = mdt.get_vertex(mdt.get_face_vertex(triangle, 0))
+		var vertex2 = mdt.get_vertex(mdt.get_face_vertex(triangle, 1))
+		var vertex3 = mdt.get_vertex(mdt.get_face_vertex(triangle, 2))
+
+		if !cell_bounds.intersects_segment(vertex1, vertex2) and !cell_bounds.intersects_segment(vertex2, vertex3) and !cell_bounds.intersects_segment(vertex3, vertex1):
+			continue
+		
+		var density = randf_range(min_density, max_density)
+		var count = int(density * 100)
+		for i in range(count):
 			var position = random_point_in_triangle(vertex1, vertex2, vertex3)
-			
-			var normal = mdt.get_face_normal(random_triangle).normalized()
+			if cell_bounds.has_point(position):
+				var normal = mdt.get_face_normal(triangle).normalized()
+				var transform = align_with_normal(normal)
+				transform.origin = position
 
-			var transform = align_with_normal(normal)
-			transform.origin = position
+				transform *= Transform3D().rotated(Vector3.UP, randf() * TAU)
+				transform.scaled(Vector3.ONE * randf_range(0.75, 1.25) * grass_height)
 
-			var random_rotation = Transform3D().rotated(Vector3.UP, randf() * TAU)
-			transform *= random_rotation
-
-			var random_scale_factor = randf_range(0.75, 1.25) * grass_height
-			transform.scaled(Vector3(random_scale_factor, random_scale_factor, random_scale_factor))
-
-			multimesh.set_instance_transform(i, transform)
-		
-		multimesh_instance.multimesh = multimesh
+				positions.append(transform)
+	
+	return positions
 
 func random_point_in_triangle(v1: Vector3, v2: Vector3, v3: Vector3) -> Vector3:
 	var r1 = sqrt(randf())
@@ -110,7 +149,6 @@ func align_with_normal(normal: Vector3) -> Transform3D:
 	var right = up.cross(Vector3.BACK).normalized()
 	var forward = up.cross(right).normalized()
 	return Transform3D(right, up, forward, Vector3.ZERO)
-
 
 func create_grass_mesh():
 	if Engine.is_editor_hint() and texture_path:
@@ -203,8 +241,8 @@ func _on_gui_input(event: InputEvent) -> void:
 
 func _on_delete_node() -> void:
 	if Engine.is_editor_hint():		
-		if node_before_path and get_node(mapmagic_terrain).has_node("TerrainMesh/GrassInstance"):
-			get_node(mapmagic_terrain + "/TerrainMesh/GrassInstance").queue_free()
+		if node_before_path and get_node(mapmagic_terrain).has_node("TerrainMesh/GrassInstances"):
+			get_node(mapmagic_terrain + "/TerrainMesh/GrassInstances").queue_free()
 			get_node(node_before_path).remove_connection_line()
 			
 		queue_free()
@@ -218,8 +256,8 @@ func _on_node_before_pressed() -> void:
 		if get_node(mapmagic_terrain).has_node("TerrainMesh") and texture_path:
 			transform_mesh()
 	else:
-		if get_node(mapmagic_terrain).has_node("TerrainMesh/GrassInstance"):
-			get_node(mapmagic_terrain + "/TerrainMesh/GrassInstance").queue_free()
+		if get_node(mapmagic_terrain).has_node("TerrainMesh/GrassInstances"):
+			get_node(mapmagic_terrain + "/TerrainMesh/GrassInstances").queue_free()
 			get_node(node_before_path).remove_connection_line()
 			node_before_path = null
 

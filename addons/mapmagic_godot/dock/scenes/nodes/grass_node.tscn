@@ -132,7 +132,7 @@ vertical_alignment = 1
 [node name="Value" type="SpinBox" parent="MarginContainer/VBoxContainer/Properties/CellSize" groups=["values"]]
 layout_mode = 2
 size_flags_horizontal = 3
-value = 50.0
+value = 100.0
 rounded = true
 allow_greater = true
 

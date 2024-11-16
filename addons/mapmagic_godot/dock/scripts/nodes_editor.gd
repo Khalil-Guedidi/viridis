@@ -24,11 +24,11 @@ func open_editor_panel() -> void:
 func close_editor_panel() -> void:
 	if Engine.is_editor_hint():
 		if $VBoxContainer.has_node("EditorPanel"):
-			$VBoxContainer/EditorPanel.queue_free()
 			if EditorInterface.get_edited_scene_root().has_node("MapMagicTerrain"):
 				var scene = PackedScene.new()
 				scene.pack($VBoxContainer/EditorPanel)
 				ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)
+			$VBoxContainer/EditorPanel.queue_free()
 
 func _on_add_node_item_pressed(id: int):
 	if Engine.is_editor_hint():
@@ -77,12 +77,3 @@ func _on_add_node_item_pressed(id: int):
 					var scene = PackedScene.new()
 					scene.pack($VBoxContainer/EditorPanel)
 					ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)
-
-func _exit_tree() -> void:
-	if Engine.is_editor_hint():
-		if $VBoxContainer.has_node("EditorPanel"):
-			$VBoxContainer/EditorPanel.queue_free()
-			if EditorInterface.get_edited_scene_root().has_node("MapMagicTerrain"):
-				var scene = PackedScene.new()
-				scene.pack($VBoxContainer/EditorPanel)
-				ResourceSaver.save(scene, mapmagic_terrain_node.editor_panel_path)
