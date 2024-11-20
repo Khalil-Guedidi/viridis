@@ -78,22 +78,25 @@ func transform_mesh() -> void:
 			setup_collision(get_node(mapmagic_terrain + "/TerrainMesh"))
 
 func setup_collision(mesh_instance: MeshInstance3D) -> void:
-	var static_body = StaticBody3D.new()
-	static_body.name = "TerrainBody"
-	mesh_instance.add_child(static_body)
-	
-	static_body.owner = mesh_instance
-	
-	var collision_shape = CollisionShape3D.new()
-	collision_shape.name = "TerrainCollision"
-	
-	var shape = ConcavePolygonShape3D.new()
-	shape.set_faces(mesh_instance.mesh.get_faces())
-	collision_shape.shape = shape
-	
-	static_body.add_child(collision_shape)
-	
-	collision_shape.owner = mesh_instance
+	if Engine.is_editor_hint():
+		if get_node(mapmagic_terrain + "/TerrainMesh").has_node("TerrainBody"):
+			get_node(mapmagic_terrain + "/TerrainMesh/TerrainBody").free()
+		var static_body = StaticBody3D.new()
+		static_body.name = "TerrainBody"
+		get_node(mapmagic_terrain + "/TerrainMesh").add_child(static_body)
+
+		static_body.owner = get_tree().edited_scene_root
+		
+		var collision_shape = CollisionShape3D.new()
+		collision_shape.name = "TerrainCollision"
+
+		var shape = ConcavePolygonShape3D.new()
+		shape.set_faces(mesh_instance.mesh.get_faces())
+		collision_shape.shape = shape
+		
+		static_body.add_child(collision_shape)
+		
+		collision_shape.owner = get_tree().edited_scene_root
 
 func remove_connection_line():
 	node_after_path = null
@@ -113,6 +116,8 @@ func _on_gui_input(event: InputEvent) -> void:
 			global_position = get_global_mouse_position() - drag_start_position
 			if node_before_path:
 				get_node(str(node_before_path) + "/NodeAfter/Button/Line").set_point_position(1, ($NodeBefore/Button.global_position + Vector2(10, 10) - get_node(str(node_before_path) + "/NodeAfter/Button/Line").global_position) * 2)
+			if node_after_path:
+				$NodeAfter/Button/Line.set_point_position(1, (get_node(str(node_after_path) + "/NodeBefore/Button").global_position + Vector2(10, 10) - $NodeAfter/Button/Line.global_position) * 2)
 
 func _on_change_property(value, node) -> void:
 	if Engine.is_editor_hint():

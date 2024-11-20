@@ -43,6 +43,4 @@ popup/item_2/id = 2
 popup/item_3/text = "Grass"
 popup/item_3/id = 3
 
-[connection signal="gui_input" from="VBoxContainer/@Panel@21980" to="VBoxContainer/@Panel@21980" method="_on_gui_input"]
-[connection signal="gui_input" from="VBoxContainer/@Panel@22683" to="VBoxContainer/@Panel@22683" method="_on_gui_input"]
-[connection signal="gui_input" from="VBoxContainer/EditorPanel" to="VBoxContainer/EditorPanel" method="_on_gui_input"]
+[connection signal="gui_input" from="VBoxContainer/@Panel@27272" to="VBoxContainer/@Panel@27272" method="_on_gui_input"]

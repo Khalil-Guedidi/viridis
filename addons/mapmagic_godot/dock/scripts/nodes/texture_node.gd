@@ -115,6 +115,8 @@ func _on_gui_input(event: InputEvent) -> void:
 			global_position = get_global_mouse_position() - drag_start_position
 			if node_before_path:
 				get_node(str(node_before_path) + "/NodeAfter/Button/Line").set_point_position(1, ($NodeBefore/Button.global_position + Vector2(10, 10) - get_node(str(node_before_path) + "/NodeAfter/Button/Line").global_position) * 2)
+			if node_after_path:
+				$NodeAfter/Button/Line.set_point_position(1, (get_node(str(node_after_path) + "/NodeBefore/Button").global_position + Vector2(10, 10) - $NodeAfter/Button/Line.global_position) * 2)
 
 func _on_delete_node() -> void:
 	if Engine.is_editor_hint():		

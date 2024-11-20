@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvbsk1oqrdtok"]
+
+[ext_resource type="Script" path="res://addons/mapmagic_godot/dock/scripts/details/grass_instances.gd" id="1_fdoq1"]
+
+[node name="GrassInstances" type="Node3D"]
+script = ExtResource("1_fdoq1")

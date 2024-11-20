@@ -107,6 +107,8 @@ func create_mesh(mesh_instance: MeshInstance3D) -> void:
 
 func setup_collision(mesh_instance: MeshInstance3D) -> void:
 	if Engine.is_editor_hint():
+		if get_node(mapmagic_terrain + "/TerrainMesh").has_node("TerrainBody"):
+			get_node(mapmagic_terrain + "/TerrainMesh/TerrainBody").free()
 		var static_body = StaticBody3D.new()
 		static_body.name = "TerrainBody"
 		get_node(mapmagic_terrain + "/TerrainMesh").add_child(static_body)
